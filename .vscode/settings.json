@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/work/hw4",
+            "binaryPath": "/work/hw4/equal-paths-test",
+            "binaryArgs": []
+        }
+    ]
+}
