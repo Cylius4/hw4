@@ -247,6 +247,7 @@ protected:
     // Add helper functions here
     static Node<Key, Value> *successor(Node<Key, Value> *current);
     void removeSubtree(Node<Key, Value> *root);
+    void removeNode(Node<Key, Value> *node);
     int isBalancedHelper(Node<Key, Value> *root) const;
 
 protected:
@@ -485,65 +486,65 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
 template <typename Key, typename Value>
 void BinarySearchTree<Key, Value>::remove(const Key &key)
 {
-    Node<Key, Value> *temp = internalFind(key);
-    // not in the tree
-    if (temp == NULL)
+    Node<Key, Value> *node = internalFind(key);
+    if (node == NULL)
         return;
+    removeNode(node);
+}
+
+template <typename Key, typename Value>
+void BinarySearchTree<Key, Value>::removeNode(Node<Key, Value> *node)
+{
     // no children
-    if (temp->getLeft() == NULL && temp->getRight() == NULL)
+    if (node->getLeft() == NULL && node->getRight() == NULL)
     {
-        if (temp == root_)
+        if (node == root_)
         {
             root_ = NULL;
-            delete temp;
-            return;
-        }
-        if (temp->getParent()->getLeft() == temp)
-        {
-            temp->getParent()->setLeft(NULL);
         }
         else
         {
-            temp->getParent()->setRight(NULL);
+            if (node->getParent()->getLeft() == node)
+            {
+                node->getParent()->setLeft(NULL);
+            }
+            else
+            {
+                node->getParent()->setRight(NULL);
+            }
         }
-        delete temp;
-        return;
+        delete node;
     }
     // one child
-    if (temp->getLeft() == NULL || temp->getRight() == NULL)
+    else if (node->getLeft() == NULL || node->getRight() == NULL)
     {
-        Node<Key, Value> *child = temp->getLeft() == NULL ? temp->getRight() : temp->getLeft();
-        if (temp == root_)
+        Node<Key, Value> *child = node->getLeft() == NULL ? node->getRight() : node->getLeft();
+        if (node == root_)
         {
             root_ = child;
             child->setParent(NULL);
-            delete temp;
-            return;
-        }
-        if (temp->getParent()->getLeft() == temp)
-        {
-            temp->getParent()->setLeft(child);
         }
         else
         {
-            temp->getParent()->setRight(child);
+            if (node->getParent()->getLeft() == node)
+            {
+                node->getParent()->setLeft(child);
+            }
+            else
+            {
+                node->getParent()->setRight(child);
+            }
+            child->setParent(node->getParent());
         }
-        child->setParent(temp->getParent());
-        delete temp;
-        return;
+        delete node;
     }
     // two children
-    Node<Key, Value> *pre = predecessor(temp);
-    nodeSwap(temp, pre);
-    if (temp->getParent()->getLeft() == temp)
-    {
-        temp->getParent()->setLeft(NULL);
-    }
     else
     {
-        temp->getParent()->setRight(NULL);
+        Node<Key, Value> *pre = predecessor(node);
+        nodeSwap(node, pre);
+        removeNode(node);
     }
-    delete temp;
 }
 
 template <class Key, class Value>
