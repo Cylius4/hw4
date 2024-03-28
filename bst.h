@@ -535,7 +535,8 @@ void BinarySearchTree<Key, Value>::remove(const Key &key)
     // two children
     Node<Key, Value> *pre = predecessor(temp);
     nodeSwap(temp, pre);
-    remove(key);
+    temp->getParent()->setLeft(NULL);
+    delete temp;
 }
 
 template <class Key, class Value>
