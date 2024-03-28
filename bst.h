@@ -275,7 +275,7 @@ BinarySearchTree<Key, Value>::iterator::iterator(Node<Key, Value> *ptr)
 template <class Key, class Value>
 BinarySearchTree<Key, Value>::iterator::iterator()
 {
-    current_ = nullptr;
+    current_ = NULL;
 }
 
 /**
@@ -349,7 +349,7 @@ Begin implementations for the BinarySearchTree class.
 template <class Key, class Value>
 BinarySearchTree<Key, Value>::BinarySearchTree()
 {
-    root_ = nullptr;
+    root_ = NULL;
 }
 
 template <typename Key, typename Value>
