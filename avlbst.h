@@ -212,11 +212,32 @@ void AVLTree<Key, Value>::insertFix(AVLNode<Key, Value> *p, AVLNode<Key, Value> 
             if (p->getLeft() == n)
             {
                 rotateRight(g);
+                p->setBalance(0);
+                g->setBalance(0);
             }
             else
             {
                 rotateLeft(p);
                 rotateRight(g);
+
+                if (n->getBalance() == -1)
+                {
+                    p->setBalance(0);
+                    g->setBalance(1);
+                    n->setBalance(0);
+                }
+                else if (n->getBalance() == 0)
+                {
+                    p->setBalance(0);
+                    g->setBalance(0);
+                    n->setBalance(0);
+                }
+                else
+                {
+                    p->setBalance(-1);
+                    g->setBalance(0);
+                    n->setBalance(0);
+                }
             }
         }
     }
@@ -237,6 +258,25 @@ void AVLTree<Key, Value>::insertFix(AVLNode<Key, Value> *p, AVLNode<Key, Value> 
             {
                 rotateRight(p);
                 rotateLeft(g);
+
+                if (n->getBalance() == 1)
+                {
+                    p->setBalance(0);
+                    g->setBalance(-1);
+                    n->setBalance(0);
+                }
+                else if (n->getBalance() == 0)
+                {
+                    p->setBalance(0);
+                    g->setBalance(0);
+                    n->setBalance(0);
+                }
+                else
+                {
+                    p->setBalance(1);
+                    g->setBalance(0);
+                    n->setBalance(0);
+                }
             }
         }
     }
@@ -295,6 +335,7 @@ void AVLTree<Key, Value>::remove(const Key &key)
                 p->setRight(NULL);
         }
     }
+    delete n;
     removeFix(p, diff);
 }
 
@@ -314,7 +355,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value> *n, int diff)
     }
     if (n->getBalance() + diff == -2)
     {
-        AVLNode<Key, Value> *c = n->getRight();
+        AVLNode<Key, Value> *c = n->getLeft();
         if (c->getBalance() == -1)
         {
             rotateRight(n);
@@ -323,7 +364,12 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value> *n, int diff)
             removeFix(p, newDiff);
         }
         else if (c->getBalance() == 0)
+        {
+            rotateRight(n);
+            n->setBalance(-1);
+            c->setBalance(1);
             return;
+        }
         else
         {
             AVLNode<Key, Value> *gc = c->getRight();
@@ -353,7 +399,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value> *n, int diff)
     else if (n->getBalance() + diff == 2)
     {
         // flip left/right and -1/+1
-        AVLNode<Key, Value> *c = n->getLeft();
+        AVLNode<Key, Value> *c = n->getRight();
         if (c->getBalance() == 1)
         {
             rotateLeft(n);
@@ -362,7 +408,12 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value> *n, int diff)
             removeFix(p, newDiff);
         }
         else if (c->getBalance() == 0)
+        {
+            rotateLeft(n);
+            n->setBalance(1);
+            c->setBalance(-1);
             return;
+        }
         else
         {
             AVLNode<Key, Value> *gc = c->getLeft();
@@ -374,16 +425,16 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value> *n, int diff)
                 c->setBalance(0);
                 gc->setBalance(0);
             }
-            else if (gc->getBalance() == -1)
+            else if (gc->getBalance() == 1)
             {
                 n->setBalance(0);
-                c->setBalance(1);
+                c->setBalance(0);
                 gc->setBalance(0);
             }
             else
             {
-                n->setBalance(-1);
-                c->setBalance(0);
+                n->setBalance(0);
+                c->setBalance(1);
                 gc->setBalance(0);
             }
             removeFix(p, newDiff);

@@ -39,13 +39,22 @@ int main(int argc, char *argv[])
     d.insert(item17);
     d.remove(15);
     // AVL Tree Tests
-    AVLTree<char, int> at;
-    at.insert(std::make_pair('a', 1));
+    AVLTree<char, std::string> at;
+    at.insert(item10);
+    at.insert(item3);
+    at.insert(item2);
+    at.insert(item15);
+    at.insert(item12);
+    at.insert(item11);
+    at.insert(item14);
     at.print();
-    at.insert(std::make_pair('b', 2));
+    at.insert(item13);
     at.print();
-    at.insert(std::make_pair('c', 2));
+    at.insert(item16);
     at.print();
-
+    at.insert(item17);
+    at.print();
+    at.remove(13);
+    at.print();
     return 0;
 }
