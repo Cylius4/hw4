@@ -332,8 +332,8 @@ void AVLTree<Key, Value>::remove(const Key &key)
         return;
     if (n->getLeft() != NULL && n->getRight() != NULL)
     {
-        AVLNode<Key, Value> *succ = static_cast<AVLNode<Key, Value> *>(this->successor(n));
-        nodeSwap(n, succ);
+        AVLNode<Key, Value> *pred = static_cast<AVLNode<Key, Value> *>(this->predecessor(n));
+        nodeSwap(n, pred);
     }
     AVLNode<Key, Value> *p = n->getParent();
     int diff = 0;
