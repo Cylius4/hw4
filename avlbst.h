@@ -429,7 +429,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value> *n, int diff)
             }
             else if (gc->getBalance() == 1)
             {
-                n->setBalance(0);
+                n->setBalance(1);
                 c->setBalance(0);
                 gc->setBalance(0);
             }
