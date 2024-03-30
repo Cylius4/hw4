@@ -130,6 +130,9 @@ class AVLTree : public BinarySearchTree<Key, Value>
 public:
     virtual void insert(const std::pair<const Key, Value> &new_item); // TODO
     virtual void remove(const Key &key);                              // TODO
+    void printBalance();
+    bool checkBalance();
+
 protected:
     virtual void nodeSwap(AVLNode<Key, Value> *n1, AVLNode<Key, Value> *n2);
 
@@ -138,7 +141,40 @@ protected:
     void removeFix(AVLNode<Key, Value> *n, int diff);
     void rotateLeft(AVLNode<Key, Value> *n);
     void rotateRight(AVLNode<Key, Value> *n);
+    int checkBalanceHelper(AVLNode<Key, Value> *n);
 };
+
+template <class Key, class Value>
+bool AVLTree<Key, Value>::checkBalance()
+{
+    return checkBalanceHelper(static_cast<AVLNode<Key, Value> *>(this->root_)) != -1;
+}
+
+template <class Key, class Value>
+int AVLTree<Key, Value>::checkBalanceHelper(AVLNode<Key, Value> *n)
+{
+    if (n == NULL)
+        return 0;
+    int l = checkBalanceHelper(n->getLeft());
+    int r = checkBalanceHelper(n->getRight());
+    if (l == -1 || r == -1)
+        return -1;
+    if (r - l != n->getBalance())
+        return -1;
+    return std::max(l, r) + 1;
+}
+
+template <class Key, class Value>
+void AVLTree<Key, Value>::printBalance()
+{
+    // smallest
+    AVLNode<Key, Value> *n = static_cast<AVLNode<Key, Value> *>(this->getSmallestNode());
+    while (n != NULL)
+    {
+        std::cout << int(n->getKey()) << " " << int(n->getBalance()) << std::endl;
+        n = static_cast<AVLNode<Key, Value> *>(this->successor(n));
+    }
+}
 
 /*
  * Recall: If key is already in the tree, you should
@@ -296,7 +332,7 @@ void AVLTree<Key, Value>::remove(const Key &key)
         return;
     if (n->getLeft() != NULL && n->getRight() != NULL)
     {
-        AVLNode<Key, Value> *succ = static_cast<AVLNode<Key, Value> *>(this->predecessor(n));
+        AVLNode<Key, Value> *succ = static_cast<AVLNode<Key, Value> *>(this->successor(n));
         nodeSwap(n, succ);
     }
     AVLNode<Key, Value> *p = n->getParent();
@@ -429,7 +465,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value> *n, int diff)
             }
             else if (gc->getBalance() == 1)
             {
-                n->setBalance(1);
+                n->setBalance(-1);
                 c->setBalance(0);
                 gc->setBalance(0);
             }
