@@ -185,7 +185,13 @@ void AVLTree<Key, Value>::insert(const std::pair<const Key, Value> &new_item)
     if (p->getBalance() != 0)
         p->setBalance(0);
     else
+    {
+        if (p->getLeft() == node)
+            p->updateBalance(-1);
+        else
+            p->updateBalance(1);
         insertFix(p, node);
+    }
 }
 
 template <class Key, class Value>
@@ -203,7 +209,7 @@ void AVLTree<Key, Value>::insertFix(AVLNode<Key, Value> *p, AVLNode<Key, Value> 
             insertFix(g, p);
         else
         {
-            if (n->getLeft() == p)
+            if (p->getLeft() == n)
             {
                 rotateRight(g);
             }
@@ -223,7 +229,7 @@ void AVLTree<Key, Value>::insertFix(AVLNode<Key, Value> *p, AVLNode<Key, Value> 
             insertFix(g, p);
         else
         {
-            if (n->getRight() == p)
+            if (p->getRight() == n)
             {
                 rotateLeft(g);
             }
