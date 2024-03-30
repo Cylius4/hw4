@@ -253,6 +253,8 @@ void AVLTree<Key, Value>::insertFix(AVLNode<Key, Value> *p, AVLNode<Key, Value> 
             if (p->getRight() == n)
             {
                 rotateLeft(g);
+                p->setBalance(0);
+                g->setBalance(0);
             }
             else
             {
