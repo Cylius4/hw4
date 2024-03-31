@@ -197,6 +197,7 @@ void AVLTree<Key, Value>::insert(const std::pair<const Key, Value> &new_item)
         if (p->getKey() == key)
         {
             p->setValue(val);
+            delete node;
             return;
         }
         if ((key < p->getKey()) & (p->getLeft() != NULL))
